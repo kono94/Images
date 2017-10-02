@@ -99,8 +99,8 @@ public class ImageFrame extends JFrame {
 		public PreviewImage(BufferedImage imageToPaint) {
 			this.imageToPaint = imageToPaint;
 			selected = false;
-			ratio = imageToPaint.getWidth() / imageToPaint.getHeight();
-			System.out.println(imageToPaint.getWidth() / imageToPaint.getHeight());
+			ratio = imageToPaint.getWidth() / (double) imageToPaint.getHeight();
+			System.out.println(imageToPaint.getWidth() /(double) imageToPaint.getHeight());
 			setPreferredSize(new Dimension((int)(160*ratio), 160));
 			addMouseListener(new MouseAdapter() {
 				@Override
@@ -166,15 +166,15 @@ public class ImageFrame extends JFrame {
 
 	class CenterImage extends JComponent {
 		private BufferedImage imageToPaint;
-		private int ratio;
+		private double ratio;
 
 		public CenterImage(BufferedImage imageToPaint) {
-			this.imageToPaint = imageToPaint;
+			this.imageToPaint = imageToPaint;   
 			setVisible(true);
 			if (centerImage != null) {
-				ratio = imageToPaint.getWidth()/imageToPaint.getHeight();
+				ratio = imageToPaint.getWidth()/(double)imageToPaint.getHeight();
 			}
-			setPreferredSize(new Dimension(900*ratio, 900));
+			setPreferredSize(new Dimension((int) (900*ratio), 900));
 			repaint();
 		}
 
