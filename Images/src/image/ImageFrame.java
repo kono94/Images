@@ -99,9 +99,9 @@ public class ImageFrame extends JFrame {
 		public PreviewImage(BufferedImage imageToPaint) {
 			this.imageToPaint = imageToPaint;
 			selected = false;
-			ratio = imageToPaint.getWidth() / imageToPaint.getHeight();
-			System.out.println(imageToPaint.getWidth() / imageToPaint.getHeight());
-			setPreferredSize(new Dimension((int)(160*ratio), 160));
+			ratio = imageToPaint.getWidth() / (double) imageToPaint.getHeight();
+			System.out.println(imageToPaint.getWidth() /(double) imageToPaint.getHeight());
+			setPreferredSize(new Dimension((int)(100*ratio), 100));
 			addMouseListener(new MouseAdapter() {
 				@Override
 				public void mousePressed(MouseEvent e) {
@@ -166,21 +166,32 @@ public class ImageFrame extends JFrame {
 
 	class CenterImage extends JComponent {
 		private BufferedImage imageToPaint;
-		private int ratio;
+		private double ratio;
 
 		public CenterImage(BufferedImage imageToPaint) {
-			this.imageToPaint = imageToPaint;
+			this.imageToPaint = imageToPaint;   
 			setVisible(true);
-			if (centerImage != null) {
-				ratio = imageToPaint.getWidth()/imageToPaint.getHeight();
-			}
-			setPreferredSize(new Dimension(900*ratio, 900));
-			repaint();
+//			if (centerImage != null) {
+//				ratio = imageToPaint.getWidth()/(double)imageToPaint.getHeight();
+//			}
+//			setPreferredSize(new Dimension((int) (900*ratio), 900));
+//			repaint();
+//		}
+//		
+//		public void updateSize() {
+//			if (centerImage != null) {
+//				ratio = imageToPaint.getWidth()/(double)imageToPaint.getHeight();
+//			}
+//			setPreferredSize(new Dimension((int) (900*ratio), 900));
+//			repaint();
 		}
 
 		@Override
 		public void paintComponent(Graphics g) {
-			g.drawImage(imageToPaint, 0, 0, getWidth(), getHeight(), this);
+			if (imageToPaint != null) {
+				ratio = imageToPaint.getWidth()/(double)imageToPaint.getHeight();
+			}
+			g.drawImage(imageToPaint, (int) ((getWidth()/2) - (getHeight()*ratio/2)), 0, (int) (getHeight()*ratio), getHeight(), this);
 		}
 	}
 
