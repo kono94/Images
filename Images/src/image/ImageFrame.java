@@ -35,6 +35,7 @@ public class ImageFrame extends JFrame {
 	private CenterImage centerImage;
 	private Vector<PreviewImage> previewImages = new Vector<PreviewImage>();
 	private int switchTime = 500;
+	private boolean switchActive;
 
 	public ImageFrame() {
 		setSize(1600, 900);
@@ -78,13 +79,14 @@ public class ImageFrame extends JFrame {
 	}
 
 	private void addImages() {
-		previewImages.removeAllElements();
+		switchActive = false;
 		for (int i = 0; i < images.size(); i++) {
 			PreviewImage tmp = new PreviewImage(images.get(i));
 			previewImages.add(tmp);
 			previewPanel.add(tmp);
-			previewPanel.repaint();
 		}
+		images.removeAllElements();
+		switchActive = true;
 	}
 
 	public static void main(String[] args) {
@@ -95,13 +97,17 @@ public class ImageFrame extends JFrame {
 		private BufferedImage imageToPaint;
 		private boolean selected;
 		private double ratio;
+		private int w,h;
 
 		public PreviewImage(BufferedImage imageToPaint) {
 			this.imageToPaint = imageToPaint;
 			selected = false;
 			ratio = imageToPaint.getWidth() / (double) imageToPaint.getHeight();
-			System.out.println(imageToPaint.getWidth() /(double) imageToPaint.getHeight());
 			setPreferredSize(new Dimension((int)(100*ratio), 100));
+			w = (getPreferredSize().width - (int) (17* ratio));
+			h = (getPreferredSize().height - 17);
+			System.out.println(w);
+			System.out.println(h);
 			addMouseListener(new MouseAdapter() {
 				@Override
 				public void mousePressed(MouseEvent e) {
@@ -124,16 +130,16 @@ public class ImageFrame extends JFrame {
 				g.setColor(Color.RED);
 				Graphics2D g2 = (Graphics2D) g;
 				g2.setStroke(new BasicStroke(4));
-				g.drawImage(imageToPaint, 0, 0, getWidth(),getHeight(), this);
-				g2.drawRect(2, 2, getWidth() - 4, getHeight() - 4);
+				g.drawImage(imageToPaint, getWidth()/2 - (w/2), 0, w,h, this);
+				g2.drawRect(2+getWidth()/2 - (w/2), 2, w - 4, h - 4);
 			} else {
 				if (imageToPaint == centerImage.imageToPaint) {
 					Graphics2D g2 = (Graphics2D) g;
 					g2.setStroke(new BasicStroke(4));
-					g.drawImage(imageToPaint, 0, 0, getWidth(),getHeight(), this);
-					g2.drawRect(2, 2, getWidth() - 4, getHeight() - 4);
+					g.drawImage(imageToPaint, getWidth()/2 - (w/2), 0, w,h, this);
+					g2.drawRect(2+getWidth()/2 - (w/2), 2, w - 4, h - 4);
 				} else {
-					g.drawImage(imageToPaint, 0, 0, getWidth(),getHeight(), this);
+					g.drawImage(imageToPaint, getWidth()/2 - (w/2), 0, w,h, this);
 				}
 			}
 		}
@@ -198,7 +204,7 @@ public class ImageFrame extends JFrame {
 	class ImageSwitch implements Runnable {
 		@Override
 		public void run() {
-			while (true) {
+			while (switchActive) {
 				for (int i = 0; i < previewImages.size(); i++) {
 					if (previewImages.get(i).selected) {
 						centerImage.imageToPaint = previewImages.get(i).imageToPaint;
@@ -209,11 +215,19 @@ public class ImageFrame extends JFrame {
 							e.printStackTrace();
 						}
 					}
+					else {
+						try {
+							Thread.sleep(1);
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+					}
 				}
 			}
 		}
 
 		public ImageSwitch() {
+			switchActive = true;
 			Thread th = new Thread(this);
 			th.start();
 		}
