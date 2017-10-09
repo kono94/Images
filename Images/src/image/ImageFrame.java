@@ -23,6 +23,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -65,6 +66,7 @@ public class ImageFrame extends JFrame {
 		JMenu switchy = new JMenu("Switchtime");
 		JMenuItem increaseHundred = new JMenuItem("+100 ms");
 		increaseHundred.addActionListener(e -> switchTime += 100);
+		increaseHundred.setAccelerator(KeyStroke.getKeyStroke("control A"));
 		JMenuItem decreaseHundred = new JMenuItem("-100 ms");
 		decreaseHundred.addActionListener(e -> {
 			if (switchTime > 100) {
