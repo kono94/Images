@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -76,6 +77,13 @@ public class ImageFrame extends JFrame {
 		bar.add(switchy);
 		switchy.add(increaseHundred);
 		switchy.add(decreaseHundred);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent e) {
+				switchActive = false;
+				dispose();
+			};
+		});
 		setVisible(true);
 		new ImageSwitch();
 	}
@@ -87,6 +95,7 @@ public class ImageFrame extends JFrame {
 			previewImages.add(tmp);
 			previewPanel.add(tmp);
 		}
+		preview.revalidate();
 		images.removeAllElements();
 		switchActive = true;
 	}
@@ -99,14 +108,14 @@ public class ImageFrame extends JFrame {
 		private BufferedImage imageToPaint;
 		private boolean selected;
 		private double ratio;
-		private int w,h;
+		private int w, h;
 
 		public PreviewImage(BufferedImage imageToPaint) {
 			this.imageToPaint = imageToPaint;
 			selected = false;
 			ratio = imageToPaint.getWidth() / (double) imageToPaint.getHeight();
-			setPreferredSize(new Dimension((int)(100*ratio), 100));
-			w = (getPreferredSize().width - (int) (17* ratio));
+			setPreferredSize(new Dimension((int) (100 * ratio), 100));
+			w = (getPreferredSize().width - (int) (17 * ratio));
 			h = (getPreferredSize().height - 17);
 			System.out.println(w);
 			System.out.println(h);
@@ -132,16 +141,16 @@ public class ImageFrame extends JFrame {
 				g.setColor(Color.RED);
 				Graphics2D g2 = (Graphics2D) g;
 				g2.setStroke(new BasicStroke(4));
-				g.drawImage(imageToPaint, getWidth()/2 - (w/2), 0, w,h, this);
-				g2.drawRect(2+getWidth()/2 - (w/2), 2, w - 4, h - 4);
+				g.drawImage(imageToPaint, getWidth() / 2 - (w / 2), 0, w, h, this);
+				g2.drawRect(2 + getWidth() / 2 - (w / 2), 2, w - 4, h - 4);
 			} else {
 				if (imageToPaint == centerImage.imageToPaint) {
 					Graphics2D g2 = (Graphics2D) g;
 					g2.setStroke(new BasicStroke(4));
-					g.drawImage(imageToPaint, getWidth()/2 - (w/2), 0, w,h, this);
-					g2.drawRect(2+getWidth()/2 - (w/2), 2, w - 4, h - 4);
+					g.drawImage(imageToPaint, getWidth() / 2 - (w / 2), 0, w, h, this);
+					g2.drawRect(2 + getWidth() / 2 - (w / 2), 2, w - 4, h - 4);
 				} else {
-					g.drawImage(imageToPaint, getWidth()/2 - (w/2), 0, w,h, this);
+					g.drawImage(imageToPaint, getWidth() / 2 - (w / 2), 0, w, h, this);
 				}
 			}
 		}
@@ -177,29 +186,30 @@ public class ImageFrame extends JFrame {
 		private double ratio;
 
 		public CenterImage(BufferedImage imageToPaint) {
-			this.imageToPaint = imageToPaint;   
+			this.imageToPaint = imageToPaint;
 			setVisible(true);
-//			if (centerImage != null) {
-//				ratio = imageToPaint.getWidth()/(double)imageToPaint.getHeight();
-//			}
-//			setPreferredSize(new Dimension((int) (900*ratio), 900));
-//			repaint();
-//		}
-//		
-//		public void updateSize() {
-//			if (centerImage != null) {
-//				ratio = imageToPaint.getWidth()/(double)imageToPaint.getHeight();
-//			}
-//			setPreferredSize(new Dimension((int) (900*ratio), 900));
-//			repaint();
+			// if (centerImage != null) {
+			// ratio = imageToPaint.getWidth()/(double)imageToPaint.getHeight();
+			// }
+			// setPreferredSize(new Dimension((int) (900*ratio), 900));
+			// repaint();
+			// }
+			//
+			// public void updateSize() {
+			// if (centerImage != null) {
+			// ratio = imageToPaint.getWidth()/(double)imageToPaint.getHeight();
+			// }
+			// setPreferredSize(new Dimension((int) (900*ratio), 900));
+			// repaint();
 		}
 
 		@Override
 		public void paintComponent(Graphics g) {
 			if (imageToPaint != null) {
-				ratio = imageToPaint.getWidth()/(double)imageToPaint.getHeight();
+				ratio = imageToPaint.getWidth() / (double) imageToPaint.getHeight();
 			}
-			g.drawImage(imageToPaint, (int) ((getWidth()/2) - (getHeight()*ratio/2)), 0, (int) (getHeight()*ratio), getHeight(), this);
+			g.drawImage(imageToPaint, (int) ((getWidth() / 2) - (getHeight() * ratio / 2)), 0,
+					(int) (getHeight() * ratio), getHeight(), this);
 		}
 	}
 
@@ -216,14 +226,14 @@ public class ImageFrame extends JFrame {
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
-					}
-					else {
+					} else {
 						try {
 							Thread.sleep(1);
 						} catch (Exception e) {
 							// TODO: handle exception
 						}
 					}
+					previewPanel.repaint();
 				}
 			}
 		}
